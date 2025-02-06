@@ -6,10 +6,7 @@ const CoursesPage = async () => {
   const coursesData = getCourses();
   const userProgressData = getUserProgress();
 
-  const [
-    courses,
-    userProgress,
-  ] = await Promise.all([
+  const [courses, userProgress] = await Promise.all([
     coursesData,
     userProgressData,
   ]);
@@ -17,12 +14,9 @@ const CoursesPage = async () => {
   return (
     <div className="h-full max-w-[912px] px-3 mx-auto">
       <h1 className="text-2xl font-bold text-neutral-700">
-        Language Courses
+        Programas de aprendizaje
       </h1>
-      <List
-        courses={courses}
-        activeCourseId={userProgress?.activeCourseId}
-      />
+      <List courses={courses} activeCourseId={userProgress?.activeCourseId} />
     </div>
   );
 };

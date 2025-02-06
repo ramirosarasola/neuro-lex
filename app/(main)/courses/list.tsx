@@ -10,7 +10,7 @@ import { upsertUserProgress } from "@/actions/user-progress";
 import { Card } from "./card";
 
 type Props = {
-  courses: typeof courses.$inferSelect[];
+  courses: (typeof courses.$inferSelect)[];
   activeCourseId?: typeof userProgress.$inferSelect.activeCourseId;
 };
 
@@ -26,24 +26,28 @@ export const List = ({ courses, activeCourseId }: Props) => {
     }
 
     startTransition(() => {
-      upsertUserProgress(id)  
-        .catch(() => toast.error("Something went wrong."));
+      upsertUserProgress(id)
+        .catch(() => toast.error("Something went wrong."))
+        .finally(() => router.refresh());
     });
   };
 
   return (
     <div className="pt-6 grid grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-4">
-      {courses.map((course) => (
-        <Card
-          key={course.id}
-          id={course.id}
-          title={course.title}
-          imageSrc={course.imageSrc}
-          onClick={onClick}
-          disabled={pending}
-          active={course.id === activeCourseId}
-        />
-      ))}
+      {courses.map(
+        (course) =>
+          course.isActive && (
+            <Card
+              key={course.id}
+              id={course.id}
+              title={course.title}
+              imageSrc={course.imageSrc}
+              onClick={onClick}
+              disabled={pending}
+              active={course.id === activeCourseId}
+            />
+          )
+      )}
     </div>
   );
 };
