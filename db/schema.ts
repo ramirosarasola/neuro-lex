@@ -38,7 +38,12 @@ export const unitsRelations = relations(units, ({ many, one }) => ({
   }),
   lessons: many(lessons),
 }));
-
+export const lessonType = pgEnum("type", [
+  "QUIZ",
+  "TEXT",
+  "VIDEO",
+  "DRAG_AND_DROP",
+]);
 export const lessons = pgTable("lessons", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -46,6 +51,7 @@ export const lessons = pgTable("lessons", {
     .references(() => units.id, { onDelete: "cascade" })
     .notNull(),
   order: integer("order").notNull(),
+  type: lessonType("type").notNull().default("QUIZ"),
   isActive: boolean("is_active").notNull().default(true),
 });
 
