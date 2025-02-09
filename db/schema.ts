@@ -94,9 +94,11 @@ export const challengeOptions = pgTable("challenge_options", {
     .references(() => challenges.id, { onDelete: "cascade" })
     .notNull(),
   text: text("text").notNull(),
-  correct: boolean("correct").notNull(),
   imageSrc: text("image_src"),
   audioSrc: text("audio_src"),
+  correctAnswer: boolean("correct_answer"), // Only for single/multiple choice
+  correctCategory: text("correct_category"), // Only for drag & drop
+  correctOrder: integer("correct_order"), // Only for ordering challenges
 });
 
 export const challengeOptionsRelations = relations(
@@ -153,4 +155,19 @@ export const userSubscription = pgTable("user_subscription", {
   stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
   stripePriceId: text("stripe_price_id").notNull(),
   stripeCurrentPeriodEnd: timestamp("stripe_current_period_end").notNull(),
+});
+
+export const verificationTypeEnum = pgEnum("verification_type", [
+  "SINGLE_CHOICE", // One correct answer (e.g., quiz)
+  "MULTIPLE_CHOICE", // Multiple correct answers
+  "DRAG_AND_DROP", // Items placed in correct categories
+  "ORDERING", // Arrange items in the correct order
+]);
+
+export const challengeVerification = pgTable("challenge_verification", {
+  id: serial("id").primaryKey(),
+  challengeId: integer("challenge_id")
+    .references(() => challenges.id, { onDelete: "cascade" })
+    .notNull(),
+  type: verificationTypeEnum("verification_type").notNull(),
 });

@@ -91,105 +91,50 @@ export const Quiz = ({
       return;
     }
 
-    if (challenge.type === "DRAG_AND_DROP") {
-      const correctOption = options.find((option) => option.correct);
-      if (!correctOption) return;
+    const correctOption = options.find((option) => option.correctAnswer);
 
-      const isCorrect = selectedOption === correctOption.id;
+    if (!correctOption) {
+      return;
+    }
 
-      if (isCorrect) {
-        startTransition(() => {
-          upsertChallengeProgress(challenge.id)
-            .then((response) => {
-              if (response?.error === "hearts") {
-                openHeartsModal();
-                return;
-              }
+    if (correctOption.id === selectedOption) {
+      startTransition(() => {
+        upsertChallengeProgress(challenge.id)
+          .then((response) => {
+            if (response?.error === "hearts") {
+              openHeartsModal();
+              return;
+            }
 
-              correctControls.play();
-              setStatus("correct");
-              setPercentage((prev) => prev + 100 / challenges.length);
+            correctControls.play();
+            setStatus("correct");
+            setPercentage((prev) => prev + 100 / challenges.length);
 
-              if (initialPercentage === 100) {
-                setHearts((prev) => Math.min(prev + 1, 5));
-              }
-            })
-            .catch(() =>
-              toast.error("Something went wrong. Please try again.")
-            );
-        });
-      } else {
-        startTransition(() => {
-          reduceHearts(challenge.id)
-            .then((response) => {
-              if (response?.error === "hearts") {
-                openHeartsModal();
-                return;
-              }
-
-              incorrectControls.play();
-              setStatus("wrong");
-
-              if (!response?.error) {
-                setHearts((prev) => Math.max(prev - 1, 0));
-              }
-            })
-            .catch(() =>
-              toast.error("Something went wrong. Please try again.")
-            );
-        });
-      }
+            // This is a practice
+            if (initialPercentage === 100) {
+              setHearts((prev) => Math.min(prev + 1, 5));
+            }
+          })
+          .catch(() => toast.error("Something went wrong. Please try again."));
+      });
     } else {
-      // Existing logic for other challenge types
-      const correctOption = options.find((option) => option.correct);
+      startTransition(() => {
+        reduceHearts(challenge.id)
+          .then((response) => {
+            if (response?.error === "hearts") {
+              openHeartsModal();
+              return;
+            }
 
-      if (!correctOption) {
-        return;
-      }
+            incorrectControls.play();
+            setStatus("wrong");
 
-      if (correctOption.id === selectedOption) {
-        startTransition(() => {
-          upsertChallengeProgress(challenge.id)
-            .then((response) => {
-              if (response?.error === "hearts") {
-                openHeartsModal();
-                return;
-              }
-
-              correctControls.play();
-              setStatus("correct");
-              setPercentage((prev) => prev + 100 / challenges.length);
-
-              // This is a practice
-              if (initialPercentage === 100) {
-                setHearts((prev) => Math.min(prev + 1, 5));
-              }
-            })
-            .catch(() =>
-              toast.error("Something went wrong. Please try again.")
-            );
-        });
-      } else {
-        startTransition(() => {
-          reduceHearts(challenge.id)
-            .then((response) => {
-              if (response?.error === "hearts") {
-                openHeartsModal();
-                return;
-              }
-
-              incorrectControls.play();
-              setStatus("wrong");
-
-              if (!response?.error) {
-                setHearts((prev) => Math.max(prev - 1, 0));
-              }
-            })
-            .catch(() =>
-              toast.error("Something went wrong. Please try again.")
-            );
-        });
-      }
+            if (!response?.error) {
+              setHearts((prev) => Math.max(prev - 1, 0));
+            }
+          })
+          .catch(() => toast.error("Something went wrong. Please try again."));
+      });
     }
   };
 
@@ -230,7 +175,9 @@ export const Quiz = ({
         <Footer
           lessonId={lessonId}
           status="completed"
-          onCheck={() => router.push("/learn")}
+          onCheck={() => {
+            router.push("/learn");
+          }}
         />
       </>
     );
