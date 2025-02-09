@@ -1,31 +1,34 @@
+import type React from "react";
+import { Card } from "../card";
 import { cn } from "@/lib/utils";
-import { challengeOptions, challenges } from "@/db/schema";
+import { ChallengeOption, ChallengeType } from "../types/challenge-types";
 
-import { Card } from "./card";
-
-type Props = {
-  options: typeof challengeOptions.$inferSelect[];
+interface BaseChallengeProps {
+  options: ChallengeOption[];
   onSelect: (id: number) => void;
   status: "correct" | "wrong" | "none";
   selectedOption?: number;
   disabled?: boolean;
-  type: typeof challenges.$inferSelect["type"];
-};
+  type: ChallengeType;
+}
 
-export const Challenge = ({
+export const BaseChallenge: React.FC<BaseChallengeProps> = ({
   options,
   onSelect,
   status,
   selectedOption,
   disabled,
   type,
-}: Props) => {
+}) => {
   return (
-    <div className={cn(
-      "grid gap-2",
-      type === "ASSIST" && "grid-cols-1",
-      type === "SELECT" && "grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))]"
-    )}>
+    <div
+      className={cn(
+        "grid gap-2",
+        type === "ASSIST" && "grid-cols-1",
+        type === "SELECT" &&
+          "grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))]"
+      )}
+    >
       {options.map((option, i) => (
         <Card
           key={option.id}

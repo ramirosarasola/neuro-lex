@@ -9,30 +9,15 @@ import { useAudio, useWindowSize, useMount } from "react-use";
 
 import { reduceHearts } from "@/actions/user-progress";
 import { useHeartsModal } from "@/store/use-hearts-modal";
-import { challengeOptions, challenges, userSubscription } from "@/db/schema";
 import { usePracticeModal } from "@/store/use-practice-modal";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 
 import { Header } from "./header";
 import { Footer } from "./footer";
-import { Challenge } from "./challenge";
 import { ResultCard } from "./result-card";
 import { QuestionBubble } from "./question-bubble";
-
-type Props = {
-  initialPercentage: number;
-  initialHearts: number;
-  initialLessonId: number;
-  initialLessonChallenges: (typeof challenges.$inferSelect & {
-    completed: boolean;
-    challengeOptions: (typeof challengeOptions.$inferSelect)[];
-  })[];
-  userSubscription:
-    | (typeof userSubscription.$inferSelect & {
-        isActive: boolean;
-      })
-    | null;
-};
+import { ChallengeHandler } from "./challenge-handler";
+import { QuizProps } from "./types/quiz-types";
 
 export const Quiz = ({
   initialPercentage,
@@ -40,7 +25,7 @@ export const Quiz = ({
   initialLessonId,
   initialLessonChallenges,
   userSubscription,
-}: Props) => {
+}: QuizProps) => {
   const { open: openHeartsModal } = useHeartsModal();
   const { open: openPracticeModal } = usePracticeModal();
 
@@ -217,16 +202,15 @@ export const Quiz = ({
               {title}
             </h1>
             <div>
-              {challenge.type === "ASSIST" && (
+              {/* {challenge.type === "ASSIST" && (
                 <QuestionBubble question={challenge.question} />
-              )}
-              <Challenge
-                options={options}
+              )} */}
+              <ChallengeHandler
+                challenge={challenge}
                 onSelect={onSelect}
                 status={status}
                 selectedOption={selectedOption}
                 disabled={pending}
-                type={challenge.type}
               />
             </div>
           </div>
