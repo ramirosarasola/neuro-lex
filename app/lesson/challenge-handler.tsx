@@ -2,6 +2,7 @@ import type React from "react";
 import { Challenge } from "./types/challenge-types";
 import { AssistChallenge } from "./_games/assist-challenge";
 import { SelectChallenge } from "./_games/select-challenge";
+import DragAndDropChallenge from "./_games/drag-and-drop-challenge";
 interface ChallengeHandlerProps {
   challenge: Challenge;
   onSelect: (id: number) => void;
@@ -30,6 +31,8 @@ export const ChallengeHandler: React.FC<ChallengeHandlerProps> = ({
       return <AssistChallenge {...commonProps} />;
     case "SELECT":
       return <SelectChallenge {...commonProps} />;
+    case "DRAG_AND_DROP":
+      return <DragAndDropChallenge {...commonProps} />;
     default:
       return null;
   }
