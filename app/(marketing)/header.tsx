@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Loader } from "lucide-react";
+import { Loader, LogIn } from "lucide-react";
 import {
   ClerkLoaded,
   ClerkLoading,
@@ -33,8 +33,12 @@ export const Header = () => {
               afterSignInUrl="/learn"
               afterSignUpUrl="/learn"
             >
-              <Button size="lg" variant="ghost">
-                Login
+              <Button
+                className="w-fit flex items-center justify-end gap-2"
+                size="lg"
+                variant="ghost"
+              >
+                <p>Iniciar Sesion</p>
               </Button>
             </SignInButton>
           </SignedOut>
