@@ -59,7 +59,6 @@ export const Quiz = ({
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
 
-  const [selectedOption, setSelectedOption] = useState<number>();
   const [status, setStatus] = useState<"correct" | "wrong" | "none">("none");
 
   const challenge = challenges[activeIndex];
@@ -68,6 +67,8 @@ export const Quiz = ({
   const onNext = () => {
     setActiveIndex((current) => current + 1);
   };
+
+  const [selectedOption, setSelectedOption] = useState<number>();
 
   const onSelect = (id: number) => {
     if (status !== "none") return;
