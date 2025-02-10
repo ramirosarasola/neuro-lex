@@ -1,22 +1,21 @@
 "use client";
 
-import { toast } from "sonner";
 import Image from "next/image";
-import Confetti from "react-confetti";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { useAudio, useWindowSize, useMount } from "react-use";
+import Confetti from "react-confetti";
+import { useAudio, useMount, useWindowSize } from "react-use";
+import { toast } from "sonner";
 
+import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
-import { upsertChallengeProgress } from "@/actions/challenge-progress";
 
-import { Header } from "./header";
-import { Footer } from "./footer";
-import { ResultCard } from "./result-card";
-import { QuestionBubble } from "./question-bubble";
 import { ChallengeHandler } from "./challenge-handler";
+import { Footer } from "./footer";
+import { Header } from "./header";
+import { ResultCard } from "./result-card";
 import { QuizProps } from "./types/quiz-types";
 
 export const Quiz = ({
@@ -182,10 +181,6 @@ export const Quiz = ({
     );
   }
 
-  const title =
-    challenge.type === "ASSIST"
-      ? "Select the correct meaning"
-      : challenge.question;
   return (
     <>
       {incorrectAudio}
@@ -198,9 +193,6 @@ export const Quiz = ({
       <div className="flex-1">
         <div className="h-full flex items-center justify-center">
           <div className="lg:min-h-[350px] lg:w-[800px] w-full px-6 lg:px-0 flex flex-col gap-y-12">
-            <h1 className="text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
-              {title}
-            </h1>
             <div>
               <ChallengeHandler
                 challenge={challenge}

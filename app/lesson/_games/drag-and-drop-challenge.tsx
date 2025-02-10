@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import type { ChallengeOption } from "../types/challenge-types";
-import { Draggable } from "../draggable";
 import { DndContext, UniqueIdentifier, type DragEndEvent } from "@dnd-kit/core";
+import { useState } from "react";
+import { Draggable } from "../draggable";
 import { Droppable } from "../droppable";
+import type { Challenge, ChallengeOption } from "../types/challenge-types";
 
 interface DragAndDropOptions extends ChallengeOption {
   container?: UniqueIdentifier;
 }
 
 interface DragAndDropChallengeProps {
-  options: DragAndDropOptions[];
+  challenge: Challenge;
   onSelect: (id: number) => void;
   status: "correct" | "wrong" | "none";
   selectedOption?: number;
@@ -19,13 +19,15 @@ interface DragAndDropChallengeProps {
 }
 
 export default function DragAndDropChallenge({
-  options,
+  challenge,
   onSelect,
   status,
   selectedOption,
   disabled,
 }: DragAndDropChallengeProps) {
-  const [items, setItems] = useState<DragAndDropOptions[]>(options);
+  const [items, setItems] = useState<DragAndDropOptions[]>(
+    challenge.challengeOptions
+  );
   const [correctContainer, incorrectContainer] = [1, 2];
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;

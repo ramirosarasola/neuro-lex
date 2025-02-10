@@ -1,10 +1,14 @@
 import type React from "react";
 import { Card } from "../card";
 import { cn } from "@/lib/utils";
-import { ChallengeOption, ChallengeType } from "../types/challenge-types";
+import {
+  Challenge,
+  ChallengeOption,
+  ChallengeType,
+} from "../types/challenge-types";
 
 interface BaseChallengeProps {
-  options: ChallengeOption[];
+  challenge: Challenge;
   onSelect: (id: number) => void;
   status: "correct" | "wrong" | "none";
   selectedOption?: number;
@@ -13,7 +17,7 @@ interface BaseChallengeProps {
 }
 
 export const BaseChallenge: React.FC<BaseChallengeProps> = ({
-  options,
+  challenge,
   onSelect,
   status,
   selectedOption,
@@ -29,7 +33,7 @@ export const BaseChallenge: React.FC<BaseChallengeProps> = ({
           "grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))]"
       )}
     >
-      {options.map((option, i) => (
+      {challenge.challengeOptions.map((option, i) => (
         <Card
           key={option.id}
           id={option.id}
