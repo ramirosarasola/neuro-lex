@@ -12,11 +12,11 @@ interface SelectChallengeProps {
 
 export const SelectChallenge: React.FC<SelectChallengeProps> = (props) => {
   return (
-    <>
+    <div className="flex flex-col gap-y-8">
       <h1 className="text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
         {props.challenge.question}
       </h1>
       <BaseChallenge {...props} type="SELECT" />
-    </>
+    </div>
   );
 };
