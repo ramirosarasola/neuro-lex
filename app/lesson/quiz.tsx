@@ -71,7 +71,6 @@ export const Quiz = ({
 
   const onSelect = (id: number) => {
     if (status !== "none") return;
-
     setSelectedOption(id);
   };
 
@@ -203,9 +202,6 @@ export const Quiz = ({
               {title}
             </h1>
             <div>
-              {challenge.type === "ASSIST" && (
-                <QuestionBubble question={challenge.question} />
-              )}
               <ChallengeHandler
                 challenge={challenge}
                 onSelect={onSelect}
