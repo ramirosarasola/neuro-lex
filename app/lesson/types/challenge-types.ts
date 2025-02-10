@@ -8,6 +8,7 @@ export interface Challenge {
   question: string;
   completed: boolean;
   challengeOptions: (typeof challengeOptions.$inferSelect)[];
+  correct_category?: string;
 }
 
 export type ChallengeOption = typeof challengeOptions.$inferSelect;

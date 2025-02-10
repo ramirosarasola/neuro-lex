@@ -1,22 +1,23 @@
-import { toast } from "sonner";
-interface VerifyResultProps {
-  options: any[];
-  selectedOption: any;
-  challenge: any;
-  startTransition: (arg: any) => void;
-  openHeartsModal: () => void;
-  upsertChallengeProgress: (arg: any) => Promise<any>;
-  correctControls: any;
-  incorrectControls: any;
-  setStatus: (arg: any) => void;
-  setPercentage: (arg: any) => void;
-  setHearts: (arg: any) => void;
-  initialPercentage: number;
-  challenges: any[];
-  reduceHearts: (arg: any) => Promise<any>;
-}
+import { Challenge, ChallengeOption } from "@/app/lesson/types/challenge-types";
 
-export default function verifySigleChoiceResult({
+type VerifySingleChoiceResultProps = {
+  options: ChallengeOption[];
+  selectedOption: number | { id: number; category: string }[] | undefined;
+  challenge: Challenge;
+  startTransition: (callback: () => void) => void;
+  openHeartsModal: () => void;
+  upsertChallengeProgress: (challengeId: number) => Promise<any>;
+  correctControls: { play: () => void };
+  incorrectControls: { play: () => void };
+  setStatus: (status: "correct" | "wrong" | "none") => void;
+  setPercentage: (callback: (prev: number) => number) => void;
+  setHearts: (callback: (prev: number) => number) => void;
+  initialPercentage: number;
+  challenges: Challenge[];
+  reduceHearts: (challengeId: number) => Promise<any>;
+};
+
+const verifySingleChoiceResult = ({
   options,
   selectedOption,
   challenge,
@@ -31,7 +32,7 @@ export default function verifySigleChoiceResult({
   initialPercentage,
   challenges,
   reduceHearts,
-}: VerifyResultProps) {
+}: VerifySingleChoiceResultProps) => {
   const correctOption = options.find((option) => option.correctAnswer);
 
   if (!correctOption) {
@@ -49,14 +50,13 @@ export default function verifySigleChoiceResult({
 
           correctControls.play();
           setStatus("correct");
-          setPercentage((prev: number) => prev + 100 / challenges.length);
+          setPercentage((prev) => prev + 100 / challenges.length);
 
-          // This is a practice
           if (initialPercentage === 100) {
-            setHearts((prev: number) => Math.min(prev + 1, 5));
+            setHearts((prev) => Math.min(prev + 1, 5));
           }
         })
-        .catch(() => toast.error("Something went wrong. Please try again."));
+        .catch(() => console.error("Something went wrong. Please try again."));
     });
   } else {
     startTransition(() => {
@@ -71,10 +71,12 @@ export default function verifySigleChoiceResult({
           setStatus("wrong");
 
           if (!response?.error) {
-            setHearts((prev: number) => Math.max(prev - 1, 0));
+            setHearts((prev) => Math.max(prev - 1, 0));
           }
         })
-        .catch(() => toast.error("Something went wrong. Please try again."));
+        .catch(() => console.error("Something went wrong. Please try again."));
     });
   }
-}
+};
+
+export default verifySingleChoiceResult;

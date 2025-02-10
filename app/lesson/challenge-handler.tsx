@@ -6,8 +6,11 @@ import { Challenge } from "./types/challenge-types";
 interface ChallengeHandlerProps {
   challenge: Challenge;
   onSelect: (id: number) => void;
+  onSelectForDragAndDrop: (
+    option: number | { id: number; category: string }[] | undefined
+  ) => void;
   status: "correct" | "wrong" | "none";
-  selectedOption?: number;
+  selectedOption?: number | { id: number; category: string }[] | undefined;
   disabled?: boolean;
 }
 
@@ -17,6 +20,7 @@ export const ChallengeHandler: React.FC<ChallengeHandlerProps> = ({
   status,
   selectedOption,
   disabled,
+  onSelectForDragAndDrop,
 }) => {
   const commonProps = {
     challenge: challenge,
@@ -24,6 +28,7 @@ export const ChallengeHandler: React.FC<ChallengeHandlerProps> = ({
     status,
     selectedOption,
     disabled,
+    onSelectForDragAndDrop,
   };
 
   switch (challenge.type) {
@@ -32,7 +37,15 @@ export const ChallengeHandler: React.FC<ChallengeHandlerProps> = ({
     case "SELECT":
       return <SelectChallenge {...commonProps} />;
     case "DRAG_AND_DROP":
-      return <DragAndDropChallenge {...commonProps} />;
+      return (
+        <DragAndDropChallenge
+          challenge={challenge}
+          status={status}
+          selectedOption={selectedOption}
+          disabled={disabled}
+          onSelectForDragAndDrop={onSelectForDragAndDrop}
+        />
+      );
     default:
       return null;
   }

@@ -6,7 +6,7 @@ interface SelectChallengeProps {
   challenge: Challenge;
   onSelect: (id: number) => void;
   status: "correct" | "wrong" | "none";
-  selectedOption?: number;
+  selectedOption?: number | { id: number; category: string }[] | undefined;
   disabled?: boolean;
 }
 

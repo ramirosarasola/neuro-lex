@@ -12,12 +12,13 @@ import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 
 import verifyDragAndDropResult from "@/utils/verify-drag-and-drop-result";
-import verifySigleChoiceResult from "@/utils/verify-single-option-result";
+import verifySingleChoiceResult from "@/utils/verify-single-option-result";
 import { ChallengeHandler } from "./challenge-handler";
 import { Footer } from "./footer";
 import { Header } from "./header";
 import { ResultCard } from "./result-card";
-import { QuizProps } from "./types/quiz-types";
+import type { QuizProps } from "./types/quiz-types";
+import { useChallengeState } from "./hooks/useChallengeState";
 
 export const Quiz = ({
   initialPercentage,
@@ -64,15 +65,13 @@ export const Quiz = ({
   const challenge = challenges[activeIndex];
   const options = challenge?.challengeOptions ?? [];
 
+  const { selectedOption, setSelectedOption, onSelect } =
+    useChallengeState(challenge);
+
+  console.log("selectedOption", selectedOption);
+
   const onNext = () => {
     setActiveIndex((current) => current + 1);
-  };
-
-  const [selectedOption, setSelectedOption] = useState<number>();
-
-  const onSelect = (id: number) => {
-    if (status !== "none") return;
-    setSelectedOption(id);
   };
 
   const onContinue = () => {
@@ -91,42 +90,38 @@ export const Quiz = ({
       return;
     }
 
+    const verifyResult = (
+      verifyFn: typeof verifySingleChoiceResult | typeof verifyDragAndDropResult
+    ) => {
+      verifyFn({
+        options,
+        selectedOption,
+        challenge,
+        startTransition,
+        openHeartsModal,
+        upsertChallengeProgress,
+        correctControls,
+        incorrectControls,
+        setStatus,
+        setPercentage,
+        setHearts,
+        initialPercentage,
+        challenges,
+        reduceHearts,
+      });
+    };
+
     switch (challenge.type) {
       case "SELECT":
-        verifySigleChoiceResult({
-          options: options,
-          selectedOption: selectedOption,
-          challenge: challenge,
-          startTransition: startTransition,
-          openHeartsModal: openHeartsModal,
-          upsertChallengeProgress: upsertChallengeProgress,
-          correctControls: correctControls,
-          incorrectControls: incorrectControls,
-          setStatus: setStatus,
-          setPercentage: setPercentage,
-          setHearts: setHearts,
-          initialPercentage: initialPercentage,
-          challenges: challenges,
-          reduceHearts: reduceHearts,
-        });
+        verifyResult(verifySingleChoiceResult);
+        break;
+      case "ASSIST":
+        verifyResult(verifySingleChoiceResult);
         break;
       case "DRAG_AND_DROP":
-        verifyDragAndDropResult({
-          options: options,
-          selectedOption: selectedOption,
-          challenge: challenge,
-          startTransition: startTransition,
-          openHeartsModal: openHeartsModal,
-          upsertChallengeProgress: upsertChallengeProgress,
-          correctControls: correctControls,
-          incorrectControls: incorrectControls,
-          setStatus: setStatus,
-          setPercentage: setPercentage,
-          setHearts: setHearts,
-          initialPercentage: initialPercentage,
-          challenges: challenges,
-          reduceHearts: reduceHearts,
-        });
+        verifyResult(verifyDragAndDropResult);
+        break;
+      // Add more cases for other challenge types as needed
       default:
         break;
     }
@@ -196,6 +191,7 @@ export const Quiz = ({
                 status={status}
                 selectedOption={selectedOption}
                 disabled={pending}
+                onSelectForDragAndDrop={setSelectedOption}
               />
             </div>
           </div>
