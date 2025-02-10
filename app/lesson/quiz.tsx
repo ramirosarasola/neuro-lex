@@ -11,7 +11,8 @@ import { reduceHearts } from "@/actions/user-progress";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 
-import verifySigleChoiceResult from "@/utils/verify-result";
+import verifyDragAndDropResult from "@/utils/verify-drag-and-drop-result";
+import verifySigleChoiceResult from "@/utils/verify-single-option-result";
 import { ChallengeHandler } from "./challenge-handler";
 import { Footer } from "./footer";
 import { Header } from "./header";
@@ -92,22 +93,39 @@ export const Quiz = ({
     switch (challenge.type) {
       case "SELECT":
         verifySigleChoiceResult({
-          options,
-          selectedOption,
-          challenge,
-          startTransition,
-          openHeartsModal,
-          upsertChallengeProgress,
-          correctControls,
-          incorrectControls,
-          setStatus,
-          setPercentage,
-          setHearts,
-          initialPercentage,
-          challenges,
-          reduceHearts,
+          options: options,
+          selectedOption: selectedOption,
+          challenge: challenge,
+          startTransition: startTransition,
+          openHeartsModal: openHeartsModal,
+          upsertChallengeProgress: upsertChallengeProgress,
+          correctControls: correctControls,
+          incorrectControls: incorrectControls,
+          setStatus: setStatus,
+          setPercentage: setPercentage,
+          setHearts: setHearts,
+          initialPercentage: initialPercentage,
+          challenges: challenges,
+          reduceHearts: reduceHearts,
         });
         break;
+      case "DRAG_AND_DROP":
+        verifyDragAndDropResult({
+          options: options,
+          selectedOption: selectedOption,
+          challenge: challenge,
+          startTransition: startTransition,
+          openHeartsModal: openHeartsModal,
+          upsertChallengeProgress: upsertChallengeProgress,
+          correctControls: correctControls,
+          incorrectControls: incorrectControls,
+          setStatus: setStatus,
+          setPercentage: setPercentage,
+          setHearts: setHearts,
+          initialPercentage: initialPercentage,
+          challenges: challenges,
+          reduceHearts: reduceHearts,
+        });
       default:
         break;
     }
