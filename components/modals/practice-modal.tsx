@@ -29,29 +29,25 @@ export const PracticeModal = () => {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <div className="flex items-center w-full justify-center mb-5">
-            <Image
-              src="/heart.svg"
-              alt="Heart"
-              height={100}
-              width={100}
-            />
+            <Image src="/heart.svg" alt="Heart" height={100} width={100} />
           </div>
           <DialogTitle className="text-center font-bold text-2xl">
-            Practice lesson
+            Lección de práctica
           </DialogTitle>
           <DialogDescription className="text-center text-base">
-            Use practice lessons to regain hearts and points. You cannot loose hearts or points in practice lessons.
+            Usa las lecciones de práctica para ganar puntos y vidas. No perderás
+            puntos ni vidas.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mb-4">
           <div className="flex flex-col gap-y-4 w-full">
             <Button
-              variant="primary" 
-              className="w-full" 
-              size="lg" 
+              variant="primary"
+              className="w-full"
+              size="lg"
               onClick={close}
             >
-              I understand
+              Entendido
             </Button>
           </div>
         </DialogFooter>
