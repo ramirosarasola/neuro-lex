@@ -156,18 +156,3 @@ export const userSubscription = pgTable("user_subscription", {
   stripePriceId: text("stripe_price_id").notNull(),
   stripeCurrentPeriodEnd: timestamp("stripe_current_period_end").notNull(),
 });
-
-export const verificationTypeEnum = pgEnum("verification_type", [
-  "SINGLE_CHOICE", // One correct answer (e.g., quiz)
-  "MULTIPLE_CHOICE", // Multiple correct answers
-  "DRAG_AND_DROP", // Items placed in correct categories
-  "ORDERING", // Arrange items in the correct order
-]);
-
-export const challengeVerification = pgTable("challenge_verification", {
-  id: serial("id").primaryKey(),
-  challengeId: integer("challenge_id")
-    .references(() => challenges.id, { onDelete: "cascade" })
-    .notNull(),
-  type: verificationTypeEnum("verification_type").notNull(),
-});

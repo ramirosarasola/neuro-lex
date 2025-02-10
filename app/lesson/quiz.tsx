@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import Confetti from "react-confetti";
 import { useAudio, useMount, useWindowSize } from "react-use";
-import { toast } from "sonner";
 
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 
+import verifySigleChoiceResult from "@/utils/verify-result";
 import { ChallengeHandler } from "./challenge-handler";
 import { Footer } from "./footer";
 import { Header } from "./header";
@@ -89,50 +89,27 @@ export const Quiz = ({
       return;
     }
 
-    const correctOption = options.find((option) => option.correctAnswer);
-
-    if (!correctOption) {
-      return;
-    }
-
-    if (correctOption.id === selectedOption) {
-      startTransition(() => {
-        upsertChallengeProgress(challenge.id)
-          .then((response) => {
-            if (response?.error === "hearts") {
-              openHeartsModal();
-              return;
-            }
-
-            correctControls.play();
-            setStatus("correct");
-            setPercentage((prev) => prev + 100 / challenges.length);
-
-            // This is a practice
-            if (initialPercentage === 100) {
-              setHearts((prev) => Math.min(prev + 1, 5));
-            }
-          })
-          .catch(() => toast.error("Something went wrong. Please try again."));
-      });
-    } else {
-      startTransition(() => {
-        reduceHearts(challenge.id)
-          .then((response) => {
-            if (response?.error === "hearts") {
-              openHeartsModal();
-              return;
-            }
-
-            incorrectControls.play();
-            setStatus("wrong");
-
-            if (!response?.error) {
-              setHearts((prev) => Math.max(prev - 1, 0));
-            }
-          })
-          .catch(() => toast.error("Something went wrong. Please try again."));
-      });
+    switch (challenge.type) {
+      case "SELECT":
+        verifySigleChoiceResult({
+          options,
+          selectedOption,
+          challenge,
+          startTransition,
+          openHeartsModal,
+          upsertChallengeProgress,
+          correctControls,
+          incorrectControls,
+          setStatus,
+          setPercentage,
+          setHearts,
+          initialPercentage,
+          challenges,
+          reduceHearts,
+        });
+        break;
+      default:
+        break;
     }
   };
 
