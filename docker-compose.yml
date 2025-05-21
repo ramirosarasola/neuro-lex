@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: ramiro
-      POSTGRES_PASSWORD: Htazzxs101
+      POSTGRES_PASSWORD: pass123
       POSTGRES_DB: dl_interactive_db
     ports:
       - "5432:5432"
